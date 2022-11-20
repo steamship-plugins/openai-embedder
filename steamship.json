@@ -1,15 +1,14 @@
 {
   "type": "plugin",
   "handle": "openai-embedder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Embed text with OpenAI.",
   "author": "Steamship",
   "entrypoint": "api.handler",
   "public": true,
   "configTemplate": {
     "model": {
-      "type": "string",
-      "default": "text-similarity-curie-001"
+      "type": "string"
     },
     "replace_newlines": {
       "type": "boolean",
@@ -19,14 +18,10 @@
       "type": "string",
       "default": "blocktext"
     },
-    "kind_filter": {
-      "type": "string",
-      "defulat": null
-    },
-    "name_filter": {
-      "type": "string",
-      "defulat": null
+    "dimensionality": {
+      "type": "number"
     }
+
   },
   "plugin": {
     "type": "tagger",
@@ -37,7 +32,7 @@
   },
   "steamshipRegistry": {
     "tagline": "Embed text with OpenAI.",
-    "tagline2": "Over 16 models available for  text search, text similarity and code search.",
+    "tagline2": "Over 16 models available for text search, text similarity and code search.",
     "usefulFor": "Useful for anyone implementing a semantic search index over snippets of code or text.",
     "videoUrl": null,
     "githubUrl": "https://github.com/steamship-plugins/openai-embedder",

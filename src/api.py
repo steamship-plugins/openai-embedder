@@ -14,8 +14,9 @@ from tagger.span_tagger import SpanStreamingConfig, SpanTagger
 
 class OpenAIEmbedderConfig(Config):
     api_key: Optional[str]
-    model: str = "text-similarity-curie-001"
+    model: str
     replace_newlines: bool = True
+    dimensionality: int
 
     granularity: Granularity = Granularity.BLOCK
     kind_filter: Optional[str] = None

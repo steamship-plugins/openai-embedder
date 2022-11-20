@@ -38,7 +38,10 @@ def _file_from_string(string: str) -> File:
 def test_embed_english_sentence():
     FILE = "roses.txt"
 
-    embedder_block_text = OpenAIEmbedderPlugin()
+    embedder_block_text = OpenAIEmbedderPlugin(config={
+        "model": "text-similarity-curie-001",
+        "dimensionality": 4096
+    })
 
     file = _read_test_file(FILE)
 
@@ -55,6 +58,8 @@ def test_embed_english_sentence():
 
     embedder_tokens_text = OpenAIEmbedderPlugin(
         config={
+            "model": "text-similarity-curie-001",
+            "dimensionality": 4096,
             "granularity": Granularity.TAG,
             "kind_filter": TagKind.DOCUMENT,
             "name_filter": DocTag.TOKEN,

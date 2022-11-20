@@ -21,7 +21,6 @@
     "dimensionality": {
       "type": "number"
     }
-
   },
   "plugin": {
     "type": "tagger",

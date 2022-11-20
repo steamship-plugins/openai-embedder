@@ -6,7 +6,8 @@ This project contains a Steamship Tagger plugin that enables embedding with Open
 
 This plugin must be configured with the following fields:
 
-* `model` - The model, listed in the [OpenAI Documentation](https://studio.oneai.com/docs?api=Pipeline+API&item=Expected+Input+Format&accordion=Introduction%2CPipeline+API%2CNode.js+SDK+Reference%2CClustering+API). The default is `text-similarity-curie-001`
+* `model` - The model, listed in the [OpenAI Documentation](https://studio.oneai.com/docs?api=Pipeline+API&item=Expected+Input+Format&accordion=Introduction%2CPipeline+API%2CNode.js+SDK+Reference%2CClustering+API).
+* `dimensionality` - Look up from the model family below.
 
 OpenAI supports four families of embedding models for different functionalities: text search, text similarity and code search. 
 Each family includes up to four models on a spectrum of capability:

@@ -16,7 +16,7 @@ class OpenAIEmbedderPlugin(SpanTagger, Invocable):
 
     class OpenAIEmbedderConfig(Config):
         api_key: Optional[str] = Field("", description="Description")
-        model: str = Field(description="Description")
+        model: str = Field("text-embedding-ada-002", description="Description")
         replace_newlines: bool = Field(True, description="Replace newlines with spaces")
         granularity: Granularity = Field(Granularity.BLOCK.value, description="Granularity level")
         kind_filter: Optional[str] = Field(None, description="Filter tags on kind")

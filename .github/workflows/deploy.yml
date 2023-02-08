@@ -3,10 +3,10 @@ name: Deploy to Steamship
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+*'  # When a SemVer tag is pushed, prefixed by `v`. Tag must match steamship.json:version
+      - 'v[0-9]+.[0-9]+.[0-9]+*'  # When a SemVer tag is pushed, prefixed by `v`. Tag must match steamship_b.json:version
     branches:
-      - main                      # Upon push to `main`. The version will be read from steamship.json:version
-      - staging                   # Upon push to `staging`. The version will be read from steamship.json:version
+      - main                      # Upon push to `main`. The version will be read from steamship_b.json:version
+      - staging                   # Upon push to `staging`. The version will be read from steamship_b.json:version
 
 jobs:
   deploy:

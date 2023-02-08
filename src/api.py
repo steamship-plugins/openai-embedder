@@ -1,7 +1,7 @@
 """Steamship OpenAI Embeddings Client"""
-
 from typing import List, Optional, Type
 
+from pydantic import Field
 from steamship import Tag
 from steamship.invocable import Config, Invocable, create_handler
 from steamship.plugin.request import PluginRequest
@@ -12,21 +12,19 @@ from tagger.span import Granularity, Span
 from tagger.span_tagger import SpanStreamingConfig, SpanTagger
 
 
-class OpenAIEmbedderConfig(Config):
-    api_key: Optional[str]
-    model: str
-    replace_newlines: bool = True
-    dimensionality: int
-
-    granularity: Granularity = Granularity.BLOCK
-    kind_filter: Optional[str] = None
-    name_filter: Optional[str] = None
-
-    class Config:
-        use_enum_values = False
-
-
 class OpenAIEmbedderPlugin(SpanTagger, Invocable):
+
+    class OpenAIEmbedderConfig(Config):
+        api_key: Optional[str] = Field("", description="Description")
+        model: str = Field(description="Description")
+        replace_newlines: bool = Field(True, description="Replace newlines with spaces")
+        granularity: Granularity = Field(Granularity.BLOCK.value, description="Granularity level")
+        kind_filter: Optional[str] = Field(None, description="Filter tags on kind")
+        name_filter: Optional[str] = Field(None, description="Filter tags on name")
+
+        class Config:
+            use_enum_values = False
+
     config: OpenAIEmbedderConfig
     client: OpenAIEmbeddingClient
 
@@ -35,8 +33,9 @@ class OpenAIEmbedderPlugin(SpanTagger, Invocable):
         validate_model(self.config.model)
         self.client = OpenAIEmbeddingClient(key=self.config.api_key)
 
-    def config_cls(self) -> Type[OpenAIEmbedderConfig]:
-        return OpenAIEmbedderConfig
+    @classmethod
+    def config_cls(cls) -> Type[Config]:
+        return cls.OpenAIEmbedderConfig
 
     def get_span_streaming_args(self) -> SpanStreamingConfig:
         return SpanStreamingConfig(
@@ -45,9 +44,9 @@ class OpenAIEmbedderPlugin(SpanTagger, Invocable):
             name_filter=self.config.name_filter
         )
 
-    def tag_span(self, request: PluginRequest[Span]) -> List[Tag.CreateRequest]:
+    def tag_span(self, request: PluginRequest[Span]) -> List[Tag]:
         if request.data.text.strip():
-            tags_lists: List[List[Tag.CreateRequest]] = self.client.request(
+            tags_lists: List[List[Tag]] = self.client.request(
                 model=self.config.model,
                 inputs=[request.data.text],
             )

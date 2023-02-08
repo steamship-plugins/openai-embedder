@@ -1,7 +1,7 @@
 import pytest
-from steamship.data import TagValue
+from steamship.data import TagValueKey
 
-from openai.api_spec import DIMENSIONS, MODEL_TO_FAMILY
+from openai.api_spec import MODEL_TO_DIMENSIONALITY
 
 __copyright__ = "Steamship"
 __license__ = "MIT"
@@ -11,9 +11,8 @@ from util import openai
 from openai.client import OpenAIEmbeddingClient
 
 TEST_DATA = []
-for m in MODEL_TO_FAMILY:
-    family = MODEL_TO_FAMILY[m]
-    TEST_DATA.append((m, DIMENSIONS[family]))
+for m in MODEL_TO_DIMENSIONALITY:
+    TEST_DATA.append((m, MODEL_TO_DIMENSIONALITY[m]))
 
 
 @pytest.mark.usefixtures("openai")
@@ -26,5 +25,5 @@ def test_embed(openai: OpenAIEmbeddingClient, model: str, dimensions: int):
         assert len(tags) == 1
         tag = tags[0]
         assert tag.value is not None
-        assert tag.value[TagValue.VECTOR_VALUE] is not None
-        assert len(tag.value[TagValue.VECTOR_VALUE]) == dimensions
+        assert tag.value[TagValueKey.VECTOR_VALUE] is not None
+        assert len(tag.value[TagValueKey.VECTOR_VALUE]) == dimensions

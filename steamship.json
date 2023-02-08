@@ -1,55 +1,75 @@
 {
-  "type": "plugin",
-  "handle": "openai-embedder",
-  "version": "1.0.1",
-  "description": "Embed text with OpenAI.",
-  "author": "Steamship",
-  "entrypoint": "api.handler",
-  "public": true,
-  "configTemplate": {
-    "model": {
-      "type": "string"
-    },
-    "replace_newlines": {
-      "type": "boolean",
-      "default": true
-    },
-    "granularity": {
-      "type": "string",
-      "default": "blocktext"
-    },
-    "dimensionality": {
-      "type": "number"
-    }
-  },
-  "plugin": {
-    "type": "tagger",
-    "path": "/tag",
-    "isTrainable": false,
-    "transport": "jsonOverHttp",
-    "runPath": "/run"
-  },
-  "steamshipRegistry": {
-    "tagline": "Embed text with OpenAI.",
-    "tagline2": "Over 16 models available for text search, text similarity and code search.",
-    "usefulFor": "Useful for anyone implementing a semantic search index over snippets of code or text.",
-    "videoUrl": null,
-    "githubUrl": "https://github.com/steamship-plugins/openai-embedder",
-    "demoUrl": null,
-    "blogUrl": null,
-    "jupyterUrl": null,
-    "authorName": "Steamship",
-    "authorEmail": "hello@steamship.com",
-    "authorTwitter": "@GetSteamship",
-    "authorUrl": "https://www.steamship.com/",
-    "tags": [
-      "NLP",
-      "Embeddings",
-      "Semantic Search",
-      "Code Search",
-      "Copilot",
-      "OpenAI",
-      "GPT-3"
-    ]
-  }
+	"type": "plugin",
+	"handle": "openai-embedder",
+	"version": "0.0.7",
+	"description": "Embed text with OpenAI.",
+	"author": "steamship",
+	"entrypoint": "Unused",
+	"public": true,
+	"plugin": {
+		"isTrainable": false,
+		"transport": "jsonOverHttp",
+		"type": "tagger"
+	},
+	"build_config": {
+		"ignore": [
+			"tests",
+			"examples"
+		]
+	},
+	"configTemplate": {
+		"api_key": {
+			"type": "string",
+			"description": "Description",
+			"default": ""
+		},
+		"model": {
+			"type": "string",
+			"description": "Description",
+			"default": null
+		},
+		"replace_newlines": {
+			"type": "boolean",
+			"description": "Replace newlines with spaces",
+			"default": true
+		},
+		"granularity": {
+			"type": "string",
+			"description": "Granularity level",
+			"default": "blocktext"
+		},
+		"kind_filter": {
+			"type": "string",
+			"description": "Filter tags on kind",
+			"default": null
+		},
+		"name_filter": {
+			"type": "string",
+			"description": "Filter tags on name",
+			"default": null
+		}
+	},
+	"steamshipRegistry": {
+		"tagline": "Embed text with OpenAI.",
+		"tagline2": "Over 16 models available for text search, text similarity and code search.",
+		"usefulFor": "Useful for anyone implementing a semantic search index over snippets of code or text.",
+		"videoURL": null,
+		"githubURL": null,
+		"demoURL": null,
+		"jupyterURL": null,
+		"authorGithub": null,
+		"authorName": "Steamship",
+		"authorEmail": "hello@steamship.com",
+		"authorTwitter": "@GetSteamship",
+		"authorURL": null,
+		"tags": [
+			"NLP",
+			"Embeddings",
+			"Semantic Search",
+			"Code Search",
+			"Copilot",
+			"OpenAI",
+			"GPT-3"
+		]
+	}
 }

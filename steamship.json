@@ -1,7 +1,7 @@
 {
 	"type": "plugin",
 	"handle": "openai-embedder",
-	"version": "0.0.7",
+	"version": "0.0.12",
 	"description": "Embed text with OpenAI.",
 	"author": "steamship",
 	"entrypoint": "Unused",
@@ -26,7 +26,7 @@
 		"model": {
 			"type": "string",
 			"description": "Description",
-			"default": null
+			"default": "text-embedding-ada-002"
 		},
 		"replace_newlines": {
 			"type": "boolean",
@@ -41,27 +41,28 @@
 		"kind_filter": {
 			"type": "string",
 			"description": "Filter tags on kind",
-			"default": null
+			"default": ""
 		},
 		"name_filter": {
 			"type": "string",
 			"description": "Filter tags on name",
-			"default": null
+			"default": ""
 		}
 	},
 	"steamshipRegistry": {
 		"tagline": "Embed text with OpenAI.",
 		"tagline2": "Over 16 models available for text search, text similarity and code search.",
 		"usefulFor": "Useful for anyone implementing a semantic search index over snippets of code or text.",
-		"videoURL": null,
-		"githubURL": null,
-		"demoURL": null,
-		"jupyterURL": null,
+		"videoUrl": null,
+		"githubUrl": null,
+		"demoUrl": null,
+		"blogUrl": null,
+		"jupyterUrl": null,
 		"authorGithub": null,
 		"authorName": "Steamship",
 		"authorEmail": "hello@steamship.com",
 		"authorTwitter": "@GetSteamship",
-		"authorURL": null,
+		"authorUrl": null,
 		"tags": [
 			"NLP",
 			"Embeddings",

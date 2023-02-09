@@ -1,7 +1,7 @@
 {
 	"type": "plugin",
-	"handle": "openai-embedder",
-	"version": "0.0.12",
+	"handle": "openai-embedder-test",
+	"version": "0.0.15",
 	"description": "Embed text with OpenAI.",
 	"author": "steamship",
 	"entrypoint": "Unused",
@@ -47,6 +47,11 @@
 			"type": "string",
 			"description": "Filter tags on name",
 			"default": ""
+		},
+		"dimensionality": {
+			"type": "number",
+			"description": "Dimensionality of the embeddings",
+			"default": null
 		}
 	},
 	"steamshipRegistry": {

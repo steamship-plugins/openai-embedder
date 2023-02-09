@@ -21,6 +21,7 @@ class OpenAIEmbedderPlugin(SpanTagger, Invocable):
         granularity: Granularity = Field(Granularity.BLOCK.value, description="Granularity level")
         kind_filter: Optional[str] = Field("", description="Filter tags on kind")
         name_filter: Optional[str] = Field("", description="Filter tags on name")
+        dimensionality: int = Field(None, description="Dimensionality of the embeddings")
 
         class Config:
             use_enum_values = False

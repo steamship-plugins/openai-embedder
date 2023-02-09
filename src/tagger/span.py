@@ -48,17 +48,20 @@ class Granularity(str, Enum):
     BLOCK = "blocktext"
     TAG = "tag"
 
+
 def _no_filter(kind_filter: str = None, name_filter: str = None) -> bool:
-    return kind_filter is None and name_filter is None
+    return not kind_filter and not name_filter
+
 
 def _tag_matches(tag: Tag, kind_filter: str = None, name_filter: str = None) -> Optional[Tag]:
     """Returns whether the tag matches the provided filter."""
     if (
-        (kind_filter is None or tag.kind == kind_filter) and
-        (name_filter is None or tag.name == name_filter)
+            (kind_filter is None or tag.kind == kind_filter) and
+            (name_filter is None or tag.name == name_filter)
     ):
         return tag
     return None
+
 
 def _tags_match(tags: Optional[List[Tag]], kind_filter: str = None, name_filter: str = None) -> Optional[List[Tag]]:
     """Returns whether one of the tags matches the provided filter."""
@@ -161,10 +164,10 @@ class Span(CamelModel):
             if tags or _no_filter(kind_filter, name_filter):
                 all_text = "\n".join([block.text for block in file.blocks or [] if block.text])
                 yield Span(
-                    file_id = file.id,
-                    granularity = Granularity.FILE,
-                    text = all_text,
-                    related_tags = tags or []
+                    file_id=file.id,
+                    granularity=Granularity.FILE,
+                    text=all_text,
+                    related_tags=tags or []
                 )
         elif granularity == Granularity.TAG:
             if not file.blocks:

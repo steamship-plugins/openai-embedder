@@ -3,12 +3,13 @@ from typing import List
 
 from steamship import Block
 from steamship.data.file import File
-from steamship.data.tags import DocTag, Tag, TagKind, TagValue
+from steamship.data.tags import DocTag, Tag, TagKind, TagValueKey
 from steamship.plugin.inputs.block_and_tag_plugin_input import \
     BlockAndTagPluginInput
 from steamship.plugin.request import PluginRequest
 
 from api import OpenAIEmbedderPlugin
+from openai.api_spec import MODEL_TO_DIMENSIONALITY
 from tagger.span import Granularity
 
 __copyright__ = "Steamship"
@@ -37,15 +38,13 @@ def _file_from_string(string: str) -> File:
 
 def test_embed_english_sentence():
     FILE = "roses.txt"
+    MODEL = "text-embedding-ada-002"
 
     embedder_block_text = OpenAIEmbedderPlugin(config={
-        "model": "text-similarity-curie-001",
-        "dimensionality": 4096
+        "model": MODEL,
     })
 
     file = _read_test_file(FILE)
-
-    NUM_BLOCKS = 5  # Includes the empty lines
 
     request = PluginRequest(data=BlockAndTagPluginInput(file=file))
     response = embedder_block_text.run(request)
@@ -53,13 +52,12 @@ def test_embed_english_sentence():
     for block in response.file.blocks:
         for tag in block.tags:
             assert tag.kind == TagKind.EMBEDDING
-            assert tag.value.get(TagValue.VECTOR_VALUE) is not None
-            assert len(tag.value.get(TagValue.VECTOR_VALUE)) == 4096
+            assert tag.value.get(TagValueKey.VECTOR_VALUE) is not None
+            assert len(tag.value.get(TagValueKey.VECTOR_VALUE)) == MODEL_TO_DIMENSIONALITY[MODEL]
 
     embedder_tokens_text = OpenAIEmbedderPlugin(
         config={
-            "model": "text-similarity-curie-001",
-            "dimensionality": 4096,
+            "model": MODEL,
             "granularity": Granularity.TAG,
             "kind_filter": TagKind.DOCUMENT,
             "name_filter": DocTag.TOKEN,
@@ -106,5 +104,5 @@ def test_embed_english_sentence():
     assert len(block.tags) > 0
     for tag in block.tags:
         assert tag.kind == TagKind.EMBEDDING
-        assert tag.value.get(TagValue.VECTOR_VALUE) is not None
-        assert len(tag.value.get(TagValue.VECTOR_VALUE)) == 4096
+        assert tag.value.get(TagValueKey.VECTOR_VALUE) is not None
+        assert len(tag.value.get(TagValueKey.VECTOR_VALUE)) == MODEL_TO_DIMENSIONALITY[MODEL]

@@ -47,10 +47,10 @@ class SpanTagger(PluginService[BlockAndTagPluginInput, BlockAndTagPluginOutput],
         # Now prepare the results. There's a bit of bookkeeping we have to do to make sure this is
         # structured properly with respect to the current BlockAndTag contract.
         block_lookup = {}
-        output = BlockAndTagPluginOutput(file=File.CreateRequest(), tags=[])
+        output = BlockAndTagPluginOutput(file=File(), tags=[])
         had_empty_block_ids = False
         for block in request.data.file.blocks:
-            output_block = Block.CreateRequest(id=block.id, tags=[])
+            output_block = Block(id=block.id, tags=[])
             if block.id is None:
                 had_empty_block_ids = True
             else:
@@ -105,7 +105,7 @@ class SpanTagger(PluginService[BlockAndTagPluginInput, BlockAndTagPluginOutput],
         BlockAndTagPluginInput. Right now these have to be provided via the Config block on the plugin."""
         raise NotImplementedError()
 
-    def tag_spans(self, request: PluginRequest[List[Span]]) -> List[Tag.CreateRequest]:
+    def tag_spans(self, request: PluginRequest[List[Span]]) -> List[Tag]:
         all_tags = []
         for span in request.data:
             plugin_request = PluginRequest(
@@ -130,7 +130,7 @@ class SpanTagger(PluginService[BlockAndTagPluginInput, BlockAndTagPluginOutput],
         return all_tags
 
     @abstractmethod
-    def tag_span(self, request: PluginRequest[Span]) -> List[Tag.CreateRequest]:
+    def tag_span(self, request: PluginRequest[Span]) -> List[Tag]:
         """The plugin author now just has to implement tagging over the provided spans."""
         raise NotImplementedError()
 

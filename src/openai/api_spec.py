@@ -2,36 +2,35 @@
 
 from steamship import SteamshipError
 
-DIMENSIONS = {
+FAMILY_TO_DIMENSIONALITY = {
     "ada": 1024,
     "babbage": 2048,
     "curie": 4096,
-    "davinci": 12288,
+    "davinci": 12288
 }
 
-MODEL_TO_FAMILY = {
-    "text-similarity-ada-001": "ada",
-    "text-similarity-babbage-001": "babbage",
-    "text-similarity-curie-001": "curie",
-    "text-similarity-davinci-001": "davinci",
-    "text-search-ada-doc-001": "ada",
-    "text-search-ada-query-001": "ada",
-    "text-search-babbage-doc-001": "babbage",
-    "text-search-babbage-query-001": "babbage",
-    "text-search-curie-doc-001": "curie",
-    "text-search-curie-query-001": "curie",
-    "text-search-davinci-doc-001": "davinci",
-    "text-search-davinci-query-001": "davinci",
-    "code-search-ada-code-001": "ada",
-    "code-search-ada-text-001": "ada",
-    "code-search-babbage-code-001": "babbage",
-    "code-search-babbage-text-001": "babbage",
+MODEL_TO_DIMENSIONALITY = {
+    "text-embedding-ada-002": 1536,
+    **{
+        f"text-similarity-{model}-001": dimensionality
+        for model, dimensionality in FAMILY_TO_DIMENSIONALITY.items()
+    },
+    **{
+        f"text-search-{model}-{type}-001": dimensionality
+        for type in ["doc", "query"]
+        for model, dimensionality in FAMILY_TO_DIMENSIONALITY.items()
+    },
+    **{
+        f"code-search-{model}-{type}-001": FAMILY_TO_DIMENSIONALITY[model]
+        for type in ["code", "text"]
+        for model in ["babbage", "ada"]
+    }
 }
+
 
 def validate_model(model: str):
-    # We know from docs.nlpcloud.com that only certain task<>model pairings are valid.
-    if model not in MODEL_TO_FAMILY:
+    if model not in MODEL_TO_DIMENSIONALITY:
         raise SteamshipError(
             message=f"Model {model} is not supported by this plugin.. " +
-            f"Valid models for this task are: {[m.value for m in MODEL_TO_FAMILY]}."
+                    f"Valid models for this task are: {[m for m in MODEL_TO_DIMENSIONALITY]}."
         )

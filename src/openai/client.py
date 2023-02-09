@@ -2,7 +2,7 @@ from enum import Enum
 from typing import List
 
 from pydantic import BaseModel
-from steamship.data import TagKind, TagValue
+from steamship.data import TagKind, TagValueKey
 from steamship.data.tags import Tag
 
 from openai.api_spec import validate_model
@@ -13,27 +13,30 @@ class OpenAIObject(str, Enum):
     LIST = 'list'
     EMBEDDING = 'embedding'
 
+
 class OpenAIEmbedding(BaseModel):
-    object: OpenAIObject # 'embedding'
+    object: OpenAIObject  # 'embedding'
     index: int
     embedding: List[float]
 
-    def to_tag(self, model: str) -> Tag.CreateRequest:
-        return Tag.CreateRequest(
+    def to_tag(self, model: str) -> Tag:
+        return Tag(
             kind=TagKind.EMBEDDING,
             name=model,
             value={
                 "service": "openai",
-                TagValue.VECTOR_VALUE: self.embedding
+                TagValueKey.VECTOR_VALUE: self.embedding
             },
         )
 
+
 class OpenAIEmbeddingList(BaseModel):
-    object: OpenAIObject # 'list'
+    object: OpenAIObject  # 'list'
     data: List[OpenAIEmbedding]
 
-    def to_tags(self, model: str) -> List[Tag.CreateRequest]:
+    def to_tags(self, model: str) -> List[Tag]:
         return [embedding.to_tag(model) for embedding in self.data]
+
 
 class OpenAIEmbeddingClient:
     URL = "https://api.openai.com/v1/embeddings"
@@ -42,8 +45,8 @@ class OpenAIEmbeddingClient:
         self.key = key
 
     def request(
-        self, model: str, inputs: List[str], **kwargs
-    ) -> List[List[Tag.CreateRequest]]:
+            self, model: str, inputs: List[str], **kwargs
+    ) -> List[List[Tag]]:
         """Performs an OpenAI request. Throw a SteamshipError in the event of error or empty response."""
 
         validate_model(model)

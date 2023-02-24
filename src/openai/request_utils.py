@@ -1,25 +1,51 @@
 import asyncio
 import json
+import logging
 from asyncio import Task
 from typing import Any, Callable, Dict, List
 
 import aiohttp
 from steamship import SteamshipError
+from tenacity import (
+    after_log,
+    before_sleep_log,
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential_jitter,
+)
 
 
 async def _json_post(session: aiohttp.ClientSession, url: str, body: Dict, service_name: str) -> Task:
-    async with session.post(url, data=json.dumps(body)) as resp:
-        if not resp.ok:
-            raise SteamshipError(
-                message=f"Request to {service_name} failed. URL={url}, Code={resp.status}. Body={await resp.text()}"
-            )
 
-        output = await resp.json()
-        if not output:
-            raise SteamshipError(
-                message=f"Request from {service_name} could not be interpreted as JSON. URL={url}"
-            )
-        return output
+    @retry(
+        reraise=True,
+        stop=stop_after_attempt(8),
+        wait=wait_exponential_jitter(jitter=5),
+        before_sleep=before_sleep_log(logging.root, logging.INFO),
+        retry=(
+                retry_if_exception_type(SteamshipError)
+        ),
+        after=after_log(logging.root, logging.INFO),
+    )
+    async def _inner_json_post():
+        async with session.post(url, data=json.dumps(body)) as resp:
+            if not resp.ok:
+                raise SteamshipError(
+                    message=f"Request to {service_name} failed. URL={url}, Code={resp.status}. Body={await resp.text()}"
+                )
+
+            output = await resp.json()
+            if not output:
+                raise SteamshipError(
+                    message=f"Request from {service_name} could not be interpreted as JSON. URL={url}"
+                )
+            return output
+
+    result = _inner_json_post()
+    logging.info("Retry statistics: " + json.dumps(_inner_json_post.retry.statistics))
+    return await result
+
 
 
 def list_batches(l: List, batch_size: int):

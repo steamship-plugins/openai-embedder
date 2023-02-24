@@ -5,10 +5,8 @@ from steamship import Block, File, SteamshipError, Tag
 from steamship.base.model import CamelModel
 from steamship.invocable import InvocableResponse, post
 from steamship.invocable.plugin_service import PluginService
-from steamship.plugin.inputs.block_and_tag_plugin_input import \
-    BlockAndTagPluginInput
-from steamship.plugin.outputs.block_and_tag_plugin_output import \
-    BlockAndTagPluginOutput
+from steamship.plugin.inputs.block_and_tag_plugin_input import BlockAndTagPluginInput
+from steamship.plugin.outputs.block_and_tag_plugin_output import BlockAndTagPluginOutput
 from steamship.plugin.request import PluginRequest
 
 from tagger.span import Granularity, Span

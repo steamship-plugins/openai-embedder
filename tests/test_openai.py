@@ -2,18 +2,13 @@ import pytest
 from steamship.data import TagValueKey
 
 from openai.api_spec import MODEL_TO_DIMENSIONALITY
-
-__copyright__ = "Steamship"
-__license__ = "MIT"
-
-from util import openai
-
 from openai.client import OpenAIEmbeddingClient
 
 TEST_DATA = []
 for m in MODEL_TO_DIMENSIONALITY:
     TEST_DATA.append((m, MODEL_TO_DIMENSIONALITY[m]))
 
+from .util import openai
 
 @pytest.mark.usefixtures("openai")
 @pytest.mark.parametrize("model,dimensions", TEST_DATA)

@@ -4,16 +4,12 @@ from typing import List
 from steamship import Block
 from steamship.data.file import File
 from steamship.data.tags import DocTag, Tag, TagKind, TagValueKey
-from steamship.plugin.inputs.block_and_tag_plugin_input import \
-    BlockAndTagPluginInput
+from steamship.plugin.inputs.block_and_tag_plugin_input import BlockAndTagPluginInput
 from steamship.plugin.request import PluginRequest
 
 from api import OpenAIEmbedderPlugin
 from openai.api_spec import MODEL_TO_DIMENSIONALITY
 from tagger.span import Granularity
-
-__copyright__ = "Steamship"
-__license__ = "MIT"
 
 
 def _read_test_file_lines(filename: str) -> List[str]:
@@ -75,7 +71,7 @@ def test_embed_english_sentence():
                 kind=TagKind.DOCUMENT,
                 name=TagKind.TOKEN,
                 start_idx=start_idx,
-                end_idx=start_idx+len(token)
+                end_idx=start_idx + len(token)
             ))
             start_idx += len(token)
 

@@ -2,12 +2,6 @@ import pytest
 from steamship.data import TagValueKey
 
 from openai.api_spec import MODEL_TO_DIMENSIONALITY
-
-__copyright__ = "Steamship"
-__license__ = "MIT"
-
-from util import openai
-
 from openai.client import OpenAIEmbeddingClient
 
 TEST_DATA = []

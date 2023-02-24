@@ -6,8 +6,14 @@ from typing import Any, Callable, Dict, List
 
 import aiohttp
 from steamship import SteamshipError
-from tenacity import stop_after_attempt, wait_exponential_jitter, before_sleep_log, retry_if_exception_type, after_log, \
-    retry
+from tenacity import (
+    after_log,
+    before_sleep_log,
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential_jitter,
+)
 
 
 async def _json_post(session: aiohttp.ClientSession, url: str, body: Dict, service_name: str) -> Task:

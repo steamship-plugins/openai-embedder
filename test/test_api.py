@@ -4,8 +4,7 @@ from typing import List
 from steamship import Block
 from steamship.data.file import File
 from steamship.data.tags import DocTag, Tag, TagKind, TagValueKey
-from steamship.plugin.inputs.block_and_tag_plugin_input import \
-    BlockAndTagPluginInput
+from steamship.plugin.inputs.block_and_tag_plugin_input import BlockAndTagPluginInput
 from steamship.plugin.request import PluginRequest
 
 from api import OpenAIEmbedderPlugin

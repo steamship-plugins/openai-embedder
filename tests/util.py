@@ -1,5 +1,5 @@
 import os
-from test import DOT_STEAMSHIP
+from tests import DOT_STEAMSHIP
 
 import pytest
 import toml
@@ -26,7 +26,7 @@ def get_key() -> str:
 def openai() -> OpenAIEmbeddingClient:
     """Return an OpenAIEmbeddingClient.
 
-    To use, simply import this file and then write a test which takes `openai`
+    To use, simply import this file and then write a tests which takes `openai`
     as an argument.
 
     Example

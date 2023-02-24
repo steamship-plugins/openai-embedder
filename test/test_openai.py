@@ -8,6 +8,7 @@ TEST_DATA = []
 for m in MODEL_TO_DIMENSIONALITY:
     TEST_DATA.append((m, MODEL_TO_DIMENSIONALITY[m]))
 
+from .util import openai
 
 @pytest.mark.usefixtures("openai")
 @pytest.mark.parametrize("model,dimensions", TEST_DATA)

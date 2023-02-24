@@ -12,9 +12,6 @@ from api import OpenAIEmbedderPlugin
 from openai.api_spec import MODEL_TO_DIMENSIONALITY
 from tagger.span import Granularity
 
-__copyright__ = "Steamship"
-__license__ = "MIT"
-
 
 def _read_test_file_lines(filename: str) -> List[str]:
     folder = os.path.dirname(os.path.abspath(__file__))
@@ -75,7 +72,7 @@ def test_embed_english_sentence():
                 kind=TagKind.DOCUMENT,
                 name=TagKind.TOKEN,
                 start_idx=start_idx,
-                end_idx=start_idx+len(token)
+                end_idx=start_idx + len(token)
             ))
             start_idx += len(token)
 

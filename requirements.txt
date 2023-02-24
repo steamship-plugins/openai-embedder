@@ -1,2 +1,3 @@
 steamship===2.3.13
 tenacity==8.2.0
+openai==0.26.5

@@ -42,9 +42,9 @@ async def _json_post(session: aiohttp.ClientSession, url: str, body: Dict, servi
                 )
             return output
 
-    result = _inner_json_post()
+    result = await _inner_json_post()
     logging.info("Retry statistics: " + json.dumps(_inner_json_post.retry.statistics))
-    return await result
+    return result
 
 
 

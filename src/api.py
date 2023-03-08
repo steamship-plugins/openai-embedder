@@ -3,7 +3,7 @@ from typing import List, Optional, Type
 
 from pydantic import Field
 from steamship import Tag
-from steamship.invocable import Config, Invocable, create_handler
+from steamship.invocable import Config, Invocable
 from steamship.plugin.request import PluginRequest
 
 from openai.api_spec import validate_model
@@ -55,6 +55,3 @@ class OpenAIEmbedderPlugin(SpanTagger, Invocable):
             return tags
         else:
             return []
-
-
-handler = create_handler(OpenAIEmbedderPlugin)

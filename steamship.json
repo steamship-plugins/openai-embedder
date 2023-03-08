@@ -1,7 +1,7 @@
 {
 	"type": "plugin",
 	"handle": "openai-embedder",
-	"version": "0.0.15",
+	"version": "0.0.17",
 	"description": "Embed text with OpenAI.",
 	"author": "steamship",
 	"entrypoint": "Unused",

@@ -1,1 +1,1 @@
-"""NLPCloud Tagger."""
+"""OpenAI Embedder."""

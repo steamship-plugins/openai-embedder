@@ -16,6 +16,13 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
 
+      - name: Setup secrets file
+        shell: bash
+        env:
+          OPEN_AI_API_KEY: "${{ secrets.OPEN_AI_API_KEY }}"
+        run: |
+          mkdir -p src/.steamship/; echo -e "api_key =" "\"""$OPEN_AI_API_KEY""\"" > src/.steamship/secrets.toml
+
       # Setup Python (faster than using Python container)
       - name: Setup Python
         uses: actions/setup-python@v2

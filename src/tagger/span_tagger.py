@@ -7,6 +7,7 @@ from steamship.invocable import InvocableResponse, post
 from steamship.invocable.plugin_service import PluginService
 from steamship.plugin.inputs.block_and_tag_plugin_input import BlockAndTagPluginInput
 from steamship.plugin.outputs.block_and_tag_plugin_output import BlockAndTagPluginOutput
+from steamship.plugin.outputs.plugin_output import UsageReport
 from steamship.plugin.request import PluginRequest
 
 from tagger.span import Granularity, Span
@@ -33,7 +34,7 @@ class SpanTagger(PluginService[BlockAndTagPluginInput, BlockAndTagPluginOutput],
                 name_filter=args.name_filter
             )
         ]
-        output_tags = self.tag_spans(
+        output_tags, usage_reports = self.tag_spans(
             PluginRequest(
                 data=spans,
                 context=request.context,
@@ -45,7 +46,7 @@ class SpanTagger(PluginService[BlockAndTagPluginInput, BlockAndTagPluginOutput],
         # Now prepare the results. There's a bit of bookkeeping we have to do to make sure this is
         # structured properly with respect to the current BlockAndTag contract.
         block_lookup = {}
-        output = BlockAndTagPluginOutput(file=File(), tags=[])
+        output = BlockAndTagPluginOutput(file=File(), tags=[], usage=usage_reports)
         had_empty_block_ids = False
         for block in request.data.file.blocks:
             output_block = Block(id=block.id, tags=[])
@@ -103,8 +104,8 @@ class SpanTagger(PluginService[BlockAndTagPluginInput, BlockAndTagPluginOutput],
         BlockAndTagPluginInput. Right now these have to be provided via the Config block on the plugin."""
         raise NotImplementedError()
 
-    def tag_spans(self, request: PluginRequest[List[Span]]) -> List[Tag]:
-        all_tags = []
+    def tag_spans(self, request: PluginRequest[List[Span]]) -> (List[Tag], Optional[List[UsageReport]]):
+        all_tags, all_usage_reports = [], []
         for span in request.data:
             plugin_request = PluginRequest(
                 data=span,
@@ -112,7 +113,8 @@ class SpanTagger(PluginService[BlockAndTagPluginInput, BlockAndTagPluginOutput],
                 status=request.status,
                 is_status_check=request.is_status_check
             )
-            tags = self.tag_span(plugin_request)
+            tags, usage_reports = self.tag_span(plugin_request)
+            all_usage_reports.extend(usage_reports)
             for tag in tags:
                 tag.file_id = span.file_id
                 if span.granularity != Granularity.FILE:
@@ -125,7 +127,7 @@ class SpanTagger(PluginService[BlockAndTagPluginInput, BlockAndTagPluginOutput],
                     tag.end_idx = None
 
                 all_tags.append(tag)
-        return all_tags
+        return all_tags, all_usage_reports
 
     @abstractmethod
     def tag_span(self, request: PluginRequest[Span]) -> List[Tag]:

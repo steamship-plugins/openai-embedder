@@ -4,6 +4,7 @@ from typing import List, Optional, Type
 from pydantic import Field
 from steamship import Tag
 from steamship.invocable import Config, Invocable
+from steamship.plugin.outputs.plugin_output import UsageReport
 from steamship.plugin.request import PluginRequest
 
 from openai.api_spec import validate_model
@@ -45,13 +46,13 @@ class OpenAIEmbedderPlugin(SpanTagger, Invocable):
             name_filter=self.config.name_filter
         )
 
-    def tag_span(self, request: PluginRequest[Span]) -> List[Tag]:
+    def tag_span(self, request: PluginRequest[Span]) -> (List[Tag], Optional[List[UsageReport]]):
         if request.data.text.strip():
-            tags_lists: List[List[Tag]] = self.client.request(
+            tags_lists, usage = self.client.request(
                 model=self.config.model,
                 inputs=[request.data.text],
             )
             tags = tags_lists[0] or []
-            return tags
+            return tags, usage
         else:
-            return []
+            return [], None

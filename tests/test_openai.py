@@ -14,7 +14,7 @@ from .util import openai
 @pytest.mark.parametrize("model,dimensions", TEST_DATA)
 def test_embed(openai: OpenAIEmbeddingClient, model: str, dimensions: int):
     texts = ["apple", "orange", "banana", "kiwi", "blueberry", "car"]
-    res = openai.request(model, texts)
+    res, _ = openai.request(model, texts)
     assert len(res) == len(texts)
     for tags in res:
         assert len(tags) == 1

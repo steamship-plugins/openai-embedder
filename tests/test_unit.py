@@ -51,6 +51,9 @@ def test_embed_english_sentence():
             assert tag.value.get(TagValueKey.VECTOR_VALUE) is not None
             assert len(tag.value.get(TagValueKey.VECTOR_VALUE)) == MODEL_TO_DIMENSIONALITY[MODEL]
 
+    assert response.usage is not None
+    assert len(response.usage) == 1
+
     embedder_tokens_text = OpenAIEmbedderPlugin(
         config={
             "model": MODEL,

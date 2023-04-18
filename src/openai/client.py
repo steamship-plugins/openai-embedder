@@ -70,9 +70,9 @@ class OpenAIEmbeddingClient:
             obj = OpenAIEmbeddingList.parse_obj(response)
             for embedding in obj.data:
                 tag_lists.append([embedding.to_tag(model=model)])
-                usage_reports.append(UsageReport(
-                    operation_unit=OperationUnit.PROMPT_TOKENS,
-                    operation_type=OperationType.RUN,
-                    operation_amount=response["usage"]["prompt_tokens"]
-                ))
+            usage_reports.append(UsageReport(
+                operation_unit=OperationUnit.PROMPT_TOKENS,
+                operation_type=OperationType.RUN,
+                operation_amount=response["usage"]["prompt_tokens"]
+            ))
         return tag_lists, usage_reports

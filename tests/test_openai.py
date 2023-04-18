@@ -1,5 +1,6 @@
 import pytest
 from steamship.data import TagValueKey
+from steamship.plugin.outputs.plugin_output import OperationUnit
 
 from openai.api_spec import MODEL_TO_DIMENSIONALITY
 from openai.client import OpenAIEmbeddingClient
@@ -22,3 +23,16 @@ def test_embed(openai: OpenAIEmbeddingClient, model: str, dimensions: int):
         assert tag.value is not None
         assert tag.value[TagValueKey.VECTOR_VALUE] is not None
         assert len(tag.value[TagValueKey.VECTOR_VALUE]) == dimensions
+
+
+@pytest.mark.usefixtures("openai")
+def test_embed(openai: OpenAIEmbeddingClient):
+    texts = ["apple", "orange sporange", "banana banana banana"]
+    res, usages = openai.request("text-embedding-ada-002", texts)
+    assert len(res) == len(texts)
+    assert sum([ usage.operation_amount for usage in usages]) == 7
+    assert len(usages) == 1
+    assert usages[0].operation_unit == OperationUnit.PROMPT_TOKENS
+
+
+

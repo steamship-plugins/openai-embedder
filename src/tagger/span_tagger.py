@@ -114,7 +114,8 @@ class SpanTagger(PluginService[BlockAndTagPluginInput, BlockAndTagPluginOutput],
                 is_status_check=request.is_status_check
             )
             tags, usage_reports = self.tag_span(plugin_request)
-            all_usage_reports.extend(usage_reports)
+            if usage_reports is not None: # Happens if span text is empty
+                all_usage_reports.extend(usage_reports)
             for tag in tags:
                 tag.file_id = span.file_id
                 if span.granularity != Granularity.FILE:

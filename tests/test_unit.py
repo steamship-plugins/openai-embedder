@@ -1,7 +1,8 @@
 import os
 from typing import List
 
-from steamship import Block
+import pytest
+from steamship import Block, SteamshipError
 from steamship.data.file import File
 from steamship.data.tags import DocTag, Tag, TagKind, TagValueKey
 from steamship.plugin.inputs.block_and_tag_plugin_input import BlockAndTagPluginInput
@@ -37,6 +38,7 @@ def test_embed_english_sentence():
     MODEL = "text-embedding-ada-002"
 
     embedder_block_text = OpenAIEmbedderPlugin(config={
+        "api_key":"",
         "model": MODEL,
     })
 
@@ -52,10 +54,11 @@ def test_embed_english_sentence():
             assert len(tag.value.get(TagValueKey.VECTOR_VALUE)) == MODEL_TO_DIMENSIONALITY[MODEL]
 
     assert response.usage is not None
-    assert len(response.usage) == 1
+    assert len(response.usage) == 3
 
     embedder_tokens_text = OpenAIEmbedderPlugin(
         config={
+            "api_key": "",
             "model": MODEL,
             "granularity": Granularity.TAG,
             "kind_filter": TagKind.DOCUMENT,
@@ -105,3 +108,9 @@ def test_embed_english_sentence():
         assert tag.kind == TagKind.EMBEDDING
         assert tag.value.get(TagValueKey.VECTOR_VALUE) is not None
         assert len(tag.value.get(TagValueKey.VECTOR_VALUE)) == MODEL_TO_DIMENSIONALITY[MODEL]
+
+def test_invalid_model_for_billing():
+
+    with pytest.raises(SteamshipError) as e:
+        _ = OpenAIEmbedderPlugin(config={'model': 'a model that does not exist', 'api_key':""})
+        assert "This plugin cannot be used with model" in str(e)

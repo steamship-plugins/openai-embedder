@@ -1,9 +1,9 @@
 """Steamship OpenAI Embeddings Client"""
-from typing import List, Optional, Type
+from typing import List, Optional, Type, Dict, Any
 
 from pydantic import Field
-from steamship import Tag
-from steamship.invocable import Config, Invocable
+from steamship import Tag, Steamship, SteamshipError
+from steamship.invocable import Config, Invocable, InvocationContext
 from steamship.plugin.outputs.plugin_output import UsageReport
 from steamship.plugin.request import PluginRequest
 
@@ -12,6 +12,7 @@ from openai.client import OpenAIEmbeddingClient
 from tagger.span import Granularity, Span
 from tagger.span_tagger import SpanStreamingConfig, SpanTagger
 
+VALID_MODELS_FOR_BILLING = ["text-embedding-ada-002"]
 
 class OpenAIEmbedderPlugin(SpanTagger, Invocable):
 
@@ -30,8 +31,16 @@ class OpenAIEmbedderPlugin(SpanTagger, Invocable):
     config: OpenAIEmbedderConfig
     client: OpenAIEmbeddingClient
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self,
+        client: Steamship = None,
+        config: Dict[str, Any] = None,
+        context: InvocationContext = None,
+     ):
+        # Load original api key before it is read from TOML, so we know to restrict models for billing
+        original_api_key = config['api_key']
+        super().__init__(client, config, context)
+        if original_api_key == "" and self.config.model not in VALID_MODELS_FOR_BILLING:
+            raise SteamshipError(f"This plugin cannot be used with model {self.config.model} while using Steamship's API key. Valid models are {VALID_MODELS_FOR_BILLING}")
         validate_model(self.config.model)
         self.client = OpenAIEmbeddingClient(key=self.config.api_key)
 
